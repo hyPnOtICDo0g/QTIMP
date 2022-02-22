@@ -1,0 +1,9 @@
+version "1.0.0"
+package "quadtree"
+purpose "Image manipulation using quadtrees."
+
+# Options
+option "union" u "Find the union of two bitmaps" string typestr="FILE" optional multiple(2) dependon="outfile"
+option "intersect" n "Find the intersection of two bitmaps" string typestr="FILE" optional multiple(2) dependon="outfile"
+option "properties" p "Display bitmap properties" string typestr="FILE" optional
+option "outfile" o "Save the output to a path/image" string typestr="FILE" optional
