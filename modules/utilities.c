@@ -21,46 +21,47 @@ void argschk(int argc, char **argv){
     }
 }
 
-void properties(char* inFile){
-	FILE *fIn = fopen(inFile, "rb");
+void properties(IMGDATA inFile){
+	FILE *fIn = fopen(inFile.fileName, "rb");
 
-	filechk(fIn, inFile);
+	filechk(fIn, inFile.fileName);
 
 	// read the 54 byte header from the input file
-	fread(header, sizeof(unsigned char), 54, fIn);
+	fread(inFile.header, sizeof(unsigned char), 54, fIn);
 
-	frmtchk(inFile);
+	// check if the file is a valid bitmap
+	frmtchk(inFile.fileName, inFile.header);
 
 	// extract the image height, width and bit depth from image header
-	width = *(int*)&header[18];
-	height = *(int*)&header[22];
-	bitDepth = *(int*)&header[28];
+	inFile.width = *(int*)&inFile.header[18];
+	inFile.height = *(int*)&inFile.header[22];
+	inFile.bitDepth = *(int*)&inFile.header[28];
 
-	printf("width: %ld\n", width);
-	printf("height: %ld\n", height);
-	printf("bit depth: %d\n", bitDepth);
+	printf("width: %d\n", inFile.width);
+	printf("height: %d\n", inFile.height);
+	printf("bit depth: %d\n", inFile.bitDepth);
 
 	fclose(fIn);
 }
 
-void filechk(FILE* fp, char* file){
+void filechk(FILE* fp, char* fileName){
 	if(fp==NULL){
-		printf("fatal: \"%s\" does not exist\n", file);
+		printf("fatal: '%s' not found\n", fileName);
 		exit(1);
 	}
 }
 
-void frmtchk(char* file){
-	// use the file header to determine it's format
-	if(header[0]+header[1]!=0x8f){
-		printf("fatal: \"%s\" is not a bitmap\n", file);
+void frmtchk(char* fileName, unsigned char* fileHeader){
+	// use the file header to determine the file format
+	if(fileHeader[0]+fileHeader[1]!=0x8f){
+		printf("fatal: '%s' is not a bitmap\n", fileName);
 		exit(1);
 	}
 }
 
-void writechk(FILE* fp, char* file){
+void writechk(FILE* fp, char* fileName){
 	if(fp==NULL){
-		printf("fatal: cannot open \"%s\"\n", file);
+		printf("fatal: cannot open '%s'\n", fileName);
 		exit(1);
 	}
 }

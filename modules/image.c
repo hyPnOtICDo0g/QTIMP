@@ -8,10 +8,6 @@
 #include "utilities.h"
 
 ARGINFO cmdargs;
-unsigned int pixel, bitDepth;
-unsigned long height, width;
-unsigned long long size;
-unsigned char header[54];
 
 int main(int argc, char **argv){
 
@@ -20,7 +16,9 @@ int main(int argc, char **argv){
 	argschk(argc, argv);
 
 	if(cmdargs.properties_given){
-		properties(cmdargs.properties_arg);
+		IMGDATA imgInfile;
+		imgInfile.fileName = cmdargs.properties_arg;
+		properties(imgInfile);
 	}
 /*
 	else if(cmdargs.union_given){
