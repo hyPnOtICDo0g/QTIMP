@@ -4,13 +4,19 @@
 // check if arguments follow the documented syntax
 void argschk(int argc, char **argv);
 
+// extract bitmap properties and display
+void properties(char* inFile);
+
 // check if a file exists on the disk
-void filechk(FILE* fp);
+void filechk(FILE* fp, char* file);
 
 // check if a file is a bitmap
-void frmtchk();
+void frmtchk(char* file);
 
 // check if the program has permission to write to disk
-void writechk(FILE* fp);
+void writechk(FILE* fp, char* file);
+
+// handle input and output files
+void filehandler(char* inFileOne, char* inFileTwo, char* outFile);
 
 #endif
