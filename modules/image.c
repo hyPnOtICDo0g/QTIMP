@@ -28,8 +28,21 @@ int main(int argc, char **argv){
 		filehandler(cmdargs.intersect_arg, cmdargs.outfile_arg);
 	}
 
-	//can add tree depth, number of nodes, count white & black pixels etc
+	// tasklist (ignore)
+	// display tree depth, number of nodes, count white & black pixels etc
 	// count number of nodes and actual pixels and display size reduction between them
+	// check if an image is b/w
+	// add args to convert from color to b/w
+	// check if image resolution is of power of 2
+	// check if image level is greater than 2^20 after log2()
+	// github docs image comparision
+	// warning: image doesn't meet requirements (optional message args)
+	// string pattern match from the end .bmp
+	// check time calc once
+	// merge all check operations
+	// check if gengetopt is installed
+	// display ratio of white to black pixels
+
 	FILE *fOut = fopen(cmdargs.outfile_arg, "wb");
 
 	// write header to the output file

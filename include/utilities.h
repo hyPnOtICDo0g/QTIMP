@@ -10,7 +10,7 @@ void argschk(int argc, char **argv);
 void properties(IMGDATA inFile);
 
 // check if a file exists on the disk
-void filechk(FILE* fp, char* fileName);
+void readchk(FILE* fp, char* fileName);
 
 // check if a file is a bitmap
 void frmtchk(char* fileName, unsigned char* fileHeader);

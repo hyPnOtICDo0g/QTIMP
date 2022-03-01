@@ -18,31 +18,34 @@ typedef struct QT{
 } QTREE;
 
 // create a node with a level and pixel value
-QTREE* __create_node(int level, int val);
+QTREE* createNode(int level, int val);
 
 // set all pixels in the sub-matrix with rows x1 to x2 and columns y1 to y2 to the value b
-void __set_pixel(QTREE* node, int x1, int y1, int x2, int y2, int b);
+void setPixel(QTREE* node, int x1, int y1, int x2, int y2, int b);
 
 // return the value of the pixel stored in a specific node
-unsigned int __get_pixel(const QTREE* node, int x1, int y1);
+unsigned int getPixel(const QTREE* node, int x1, int y1);
 
 // traverse the quadtree and get the matrix equivalent
-void __get_matrix(const QTREE* root);
+void getMatrix(const QTREE* root);
 
 // delete a tree by recursively freeing nodes at each level
-void __delete_tree(QTREE* root);
+void deleteTree(QTREE* root);
 
 // deep copy a source tree and return the destination tree (clone)
-void __tree_copy(QTREE** dest_t, const QTREE* source_t);
+void treeCopy(QTREE** dest_t, const QTREE* source_t);
 
 // assigns a new tree to `root` by deleting it and cloning `source_t`
-void __assign_tree(QTREE** root, const QTREE* source_t);
+void assignTree(QTREE** root, const QTREE* source_t);
 
 // trim down redundant nodes, if any
-void __post_process(QTREE* node);
+void postProcess(QTREE* node);
 
-// count the number of nodes in a quadtree
-unsigned long long __count_nodes(const QTREE* root);
+// count the number of total nodes in a quadtree
+unsigned long long totalCount(const QTREE* root);
+
+// count the number of nodes in a quadtree based on the value given
+unsigned long long countNodes(const QTREE* root, int val);
 
 // pixelwise boolean OR (union)
 void overlap(QTREE** T1, const QTREE* T2);
@@ -51,6 +54,6 @@ void overlap(QTREE** T1, const QTREE* T2);
 void intersect(QTREE** T1, const QTREE* T2);
 
 // toggle pixel values of each node in a quadtree
-void complement(QTREE* root);
+void invert(QTREE* root);
 
 #endif

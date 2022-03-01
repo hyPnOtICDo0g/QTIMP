@@ -12,7 +12,7 @@ typedef struct gengetopt_args_info ARGINFO;
 
 // structure to store image data
 typedef struct {
-    char* fileName;
+    char *fileName;
     unsigned int pixel; // pixel value, can be white or black
     unsigned int bitDepth;
     unsigned int height;

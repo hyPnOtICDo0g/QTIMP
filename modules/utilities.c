@@ -9,11 +9,11 @@ void argschk(int argc, char **argv){
 
 	if (
         (cmdline_parser(argc, argv, &cmdargs) != 0 || argc == 1 || !(cmdargs.union_given || cmdargs.outfile_given || cmdargs.properties_given || cmdargs.intersect_given))
-		    // --outfile requires either --union or --intersect
+			// --outfile requires either --union or --intersect
 		|| (!(cmdargs.intersect_given || cmdargs.union_given) && cmdargs.outfile_given)
-		    // --properties requires only 1 argument and 0 flags
+			// --properties requires only 1 argument and 0 flags
         || ((cmdargs.outfile_given || cmdargs.union_given || cmdargs.intersect_given) && cmdargs.properties_given)
-            // either pass --union or --intersect but not both
+			// either pass --union or --intersect but not both
         || (cmdargs.union_given && cmdargs.intersect_given)
         ){
             printf("Usage: %s [OPTION]...\nTry '%s --help' for more information.\n", argv[0], argv[0]);
@@ -24,7 +24,7 @@ void argschk(int argc, char **argv){
 void properties(IMGDATA inFile){
 	FILE *fIn = fopen(inFile.fileName, "rb");
 
-	filechk(fIn, inFile.fileName);
+	readchk(fIn, inFile.fileName);
 
 	// read the 54 byte header from the input file
 	fread(inFile.header, sizeof(unsigned char), 54, fIn);
@@ -44,7 +44,7 @@ void properties(IMGDATA inFile){
 	fclose(fIn);
 }
 
-void filechk(FILE* fp, char* fileName){
+void readchk(FILE* fp, char* fileName){
 	if(fp==NULL){
 		printf("fatal: '%s' not found\n", fileName);
 		exit(1);
@@ -54,7 +54,7 @@ void filechk(FILE* fp, char* fileName){
 void frmtchk(char* fileName, unsigned char* fileHeader){
 	// use the file header to determine the file format
 	if(fileHeader[0]+fileHeader[1]!=0x8f){
-		printf("fatal: '%s' is not a bitmap\n", fileName);
+		printf("warning: '%s' is not a bitmap\n", fileName);
 		exit(1);
 	}
 }
