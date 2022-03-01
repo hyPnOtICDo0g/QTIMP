@@ -2,23 +2,25 @@
 #include <stdlib.h>
 #include <time.h>
 
-#include "cmdline.h"
 #include "image.h"
 #include "quadtree.h"
 #include "utilities.h"
-
-ARGINFO cmdargs;
 
 int main(int argc, char **argv){
 
 	clock_t time = clock();
 
-	argschk(argc, argv);
+	argsCheck(argc, argv);
+
+	IMGDATA imgInFile1, imgInFile2;
+	imgInFile1.fileName = cmdargs.infile_arg[0];
+	imgInFile2.fileName = cmdargs.infile_arg[1];
 
 	if(cmdargs.properties_given){
-		IMGDATA imgInfile;
-		imgInfile.fileName = cmdargs.properties_arg;
-		properties(imgInfile);
+		properties(&imgInFile1);
+	}
+	else if(cmdargs.convert_given){
+		convert(imgInFile1, cmdargs.outfile_arg[0]);
 	}
 /*
 	else if(cmdargs.union_given){
@@ -31,32 +33,16 @@ int main(int argc, char **argv){
 	// tasklist (ignore)
 	// display tree depth, number of nodes, count white & black pixels etc
 	// count number of nodes and actual pixels and display size reduction between them
-	// check if an image is b/w
-	// add args to convert from color to b/w
+	// check if an image is b/w & 24bit
 	// check if image resolution is of power of 2
 	// check if image level is greater than 2^20 after log2()
-	// github docs image comparision
+	// github docs image comparision and add sample images to a folder
 	// warning: image doesn't meet requirements (optional message args)
 	// string pattern match from the end .bmp
 	// check time calc once
 	// merge all check operations
 	// check if gengetopt is installed
 	// display ratio of white to black pixels
-
-	FILE *fOut = fopen(cmdargs.outfile_arg, "wb");
-
-	// write header to the output file
-	fwrite(header, sizeof(unsigned char), 54, fOut);
-
-	size = height*width;
-
-	// extract the color table the image is of <=8-bit depth
-	if(bitDepth<=8){
-
-		unsigned char colorTable[1024];
-		fread(colorTable, sizeof(unsigned char), 1024, fIn);
-		fwrite(colorTable, sizeof(unsigned char), 1024, fOut);
-	}
 
 	// allocate buffer to store the image
 	unsigned char (*buffer)[size][3] = malloc(sizeof *buffer);
@@ -68,25 +54,6 @@ int main(int argc, char **argv){
 		return 0;
 	}
 
-	// traverse all the pixels in the image
-	for(i=0; i<size; i++){
-
-		// get RGB values from buffer
-		(*buffer)[i][2]=getc(fIn);
-		(*buffer)[i][1]=getc(fIn);
-		(*buffer)[i][0]=getc(fIn);
-
-		// convert RGB -> grayscale -> b/w
-		pixel = (((*buffer)[i][0]*0.3) + ((*buffer)[i][1]*0.59) + ((*buffer)[i][2]*0.11)) > THRESHOLD ? WHITE : BLACK;
-
-		// write the pixel to output file
-		// write entire buffer later instead?
-		for(j=0; j<3; j++)
-			putc(pixel, fOut);
-	}
-
-	fclose(fOut);
-	fclose(fIn);
 	free(buffer);
 */
 

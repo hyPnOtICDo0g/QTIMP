@@ -1,7 +1,7 @@
 .vscode
 build
 a.out
-quadtree
 *.exe
 *.bmp
 cmdline*
+images

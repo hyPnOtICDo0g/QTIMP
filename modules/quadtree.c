@@ -8,7 +8,7 @@
 long long twoPows[] = {1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536, 131072, 262144, 524288, 1048576};
 
 QTREE* createNode(int level, int val){
-	QTREE *node = (QTREE*) malloc(sizeof(QTREE));
+    QTREE *node = (QTREE*) malloc(sizeof(QTREE));
     if(node == NULL){
         printf("warning: insufficient memory\n");
         exit(1);
@@ -20,7 +20,7 @@ QTREE* createNode(int level, int val){
     node->tr = NULL;
     node->bl = NULL;
     node->br = NULL;
-	return node;
+    return node;
 }
 
 void setPixel(QTREE* node, int x1, int y1, int x2, int y2, int b){
@@ -35,7 +35,7 @@ void setPixel(QTREE* node, int x1, int y1, int x2, int y2, int b){
         deleteTree(node);
         node->isLeaf = 1;
         node->value = b;
-		return;
+        return;
     }
     else{
         if (node->isLeaf){
@@ -216,7 +216,7 @@ unsigned long long countNodes(const QTREE* root, int val){
         }
     }
     else{
-        return  (countNodes(root->tl, val) + countNodes(root->tr, val) + countNodes(root->bl, val) + countNodes(root->br, val));
+        return (countNodes(root->tl, val) + countNodes(root->tr, val) + countNodes(root->bl, val) + countNodes(root->br, val));
     }
 }
 
@@ -249,7 +249,7 @@ void overlap(QTREE** T1, const QTREE* T2){
         overlap(&(*T1)->bl, T2->bl);
         overlap(&(*T1)->br, T2->br);
     }
-	postProcess(*T1);
+    postProcess(*T1);
 }
 
 void intersect(QTREE** T1, const QTREE* T2){
@@ -282,7 +282,6 @@ void intersect(QTREE** T1, const QTREE* T2){
         intersect(&(*T1)->bl, T2->bl);
         intersect(&(*T1)->br, T2->br);
     }
-
     postProcess(*T1);
 }
 
