@@ -1,8 +1,8 @@
-#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 
 #include "quadtree.h"
+#include "utilities.h"
 
 // stores the first 20 powers of 2
 long long twoPows[] = {1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536, 131072, 262144, 524288, 1048576};
@@ -130,17 +130,6 @@ unsigned int getPixel(const QTREE* node, int x1, int y1){
     }
 }
 
-void getMatrix(const QTREE* root){
-    int i, j;
-    for (i=0; i<pow(2, root->level); i++){
-        for (j=0; j<pow(2, root->level); j++){
-            printf("%u ", getPixel(root, i, j));
-        }
-        printf("\n");
-    }
-    printf("\n");
-}
-
 void deleteTree(QTREE* root){
     // check if the root node is not a leaf
     if (!root->isLeaf){
@@ -197,7 +186,7 @@ void postProcess(QTREE* node){
     }
 }
 
-unsigned long long totalCount(const QTREE* root){
+unsigned long totalCount(const QTREE* root){
     if (root == NULL){
        return 0;
     }
@@ -206,7 +195,7 @@ unsigned long long totalCount(const QTREE* root){
     }
 }
 
-unsigned long long countNodes(const QTREE* root, int val){
+unsigned long countNodes(const QTREE* root, int val){
     if (root->isLeaf){
         if (root->value == val){
             return 1;
@@ -298,7 +287,7 @@ void invert(QTREE* root){
     }
 }
 
-#ifdef DEBUG // comment #ifdef, #define and #endif to manually debug
+#ifdef DEBUG
 #define DEBUG
 int main(){
     // create a root node for tree `T1` where level = 3 and value = 0
@@ -314,9 +303,9 @@ int main(){
     setPixel(T1,4,1,4,5,1);
 
     getMatrix(T1);
-    printf("total: %llu\n", totalCount(T1));
-    printf("whites: %llu\n", countNodes(T1, 1));
-    printf("blacks: %llu\n\n", countNodes(T1, 0));
+    printf("total: %lu\n", totalCount(T1));
+    printf("whites: %lu\n", countNodes(T1, 1));
+    printf("blacks: %lu\n\n", countNodes(T1, 0));
 
     // create a root node for tree `T2` where level = 3 and value = 0
     QTREE *T2 = createNode(3, 0);
@@ -328,15 +317,13 @@ int main(){
     setPixel(T2,5,2,5,4,1);
 
     getMatrix(T2);
-    printf("total: %llu\n", totalCount(T2));
-    printf("whites: %llu\n", countNodes(T2, 1));
-    printf("blacks: %llu\n\n", countNodes(T2, 0));
+    printf("total: %lu\n", totalCount(T2));
+    printf("whites: %lu\n", countNodes(T2, 1));
+    printf("blacks: %lu\n\n", countNodes(T2, 0));
 
-    /*
-    `copy` is a clone of the quadtree `T1` created from the first image
-    a deep copy has been performed to retain the contents of `T1` as-is
-    we use this tree to avoid deep copying of similar nodes from `T2`
-    */
+    // `copy` is a clone of the quadtree `T1` created from the first image
+    // a deep copy has been performed to retain the contents of `T1` as-is
+    // we use this tree to avoid deep copying of similar nodes from `T2`
 
     QTREE *copy = NULL;
     treeCopy(&copy, T1);
@@ -345,16 +332,17 @@ int main(){
     overlap(&copy, T2);
 
     getMatrix(copy);
-    printf("total: %llu\n", totalCount(copy));
-    printf("whites: %llu\n", countNodes(copy, 1));
-    printf("blacks: %llu\n\n", countNodes(copy, 0));
+    printf("total: %lu\n", totalCount(copy));
+    printf("whites: %lu\n", countNodes(copy, 1));
+    printf("blacks: %lu\n\n", countNodes(copy, 0));
 
     // complement the union
     invert(copy);
+
     getMatrix(copy);
-    printf("total: %llu\n", totalCount(copy));
-    printf("whites: %llu\n", countNodes(copy, 1));
-    printf("blacks: %llu\n\n", countNodes(copy, 0));
+    printf("total: %lu\n", totalCount(copy));
+    printf("whites: %lu\n", countNodes(copy, 1));
+    printf("blacks: %lu\n\n", countNodes(copy, 0));
     return 0;
 }
 #endif

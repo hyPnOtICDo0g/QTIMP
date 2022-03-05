@@ -8,8 +8,8 @@
 
 // struct definition for a node in a quadtree
 typedef struct QT{
-    int value; // set to -1 if a node is a root node else 0 or 1; 0 is black & 1 is white
-    int isLeaf; // to determine if a node is leaf; operations can be carried out using `value` but this makes the code more readable
+    int value; // set to -1 if a node is a root node else 0 or 1; black is 0 & white is 1
+    int isLeaf; // to determine whether a node is leaf; operations can be carried out using `value` but it makes the code more readable
     int level; // 2^level * 2^level is the size of the submatrix stored by a node; not the standard tree level
     struct QT* tr; // top-right
     struct QT* tl; // top-left
@@ -26,9 +26,6 @@ void setPixel(QTREE* node, int x1, int y1, int x2, int y2, int b);
 // return the value of the pixel stored in a specific node
 unsigned int getPixel(const QTREE* node, int x1, int y1);
 
-// traverse the quadtree and get the matrix equivalent
-void getMatrix(const QTREE* root);
-
 // delete a tree by recursively freeing nodes at each level
 void deleteTree(QTREE* root);
 
@@ -42,10 +39,10 @@ void assignTree(QTREE** root, const QTREE* source_t);
 void postProcess(QTREE* node);
 
 // count the number of total nodes in a quadtree
-unsigned long long totalCount(const QTREE* root);
+unsigned long totalCount(const QTREE* root);
 
 // count the number of nodes in a quadtree based on the value given
-unsigned long long countNodes(const QTREE* root, int val);
+unsigned long countNodes(const QTREE* root, int val);
 
 // pixelwise boolean OR (union)
 void overlap(QTREE** T1, const QTREE* T2);

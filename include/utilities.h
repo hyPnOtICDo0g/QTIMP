@@ -10,9 +10,6 @@ extern struct gengetopt_args_info cmdargs;
 // check if arguments follow the documented syntax
 void argsCheck(int argc, char **argv);
 
-// extract bitmap properties and display
-void properties(IMGDATA* inFile);
-
 // check if a file exists on the disk or the program has read/write permissions
 void fileCheck(FILE* fp, char* fileName);
 
@@ -22,7 +19,16 @@ void formatCheck(FILE* fp, char* fileName, unsigned char* fileHeader);
 // extract the color table, if present
 void extractColorTable(FILE* fIn, FILE* fOut);
 
-// convert a color image to B&W
-void convert(IMGDATA inFile, char* outFile);
+// write a pixel (RGB) to the output image
+void writeByte(FILE* fOut, int val);
+
+// initialize image structure to default values
+void initImage(IMGDATA* img, char* fileName);
+
+// print image and quadtree properties
+void printProperties(IMGDATA img, const QTREE* root);
+
+// print the image matrix by traversing a quadtree (DEBUG)
+void getMatrix(const QTREE* root);
 
 #endif

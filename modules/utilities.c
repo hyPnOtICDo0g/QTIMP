@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
 #include "utilities.h"
 
@@ -19,34 +20,8 @@ void argsCheck(int argc, char **argv){
     }
 }
 
-void properties(IMGDATA* inFile){
-	FILE *fIn = fopen(inFile->fileName, "rb");
-
-	// check if the input file exists on the disk
-	fileCheck(fIn, inFile->fileName);
-
-	// read the 54 byte header from the input file
-	fread(inFile->header, sizeof(unsigned char), 54, fIn);
-
-	// check if the file is a valid bitmap
-	formatCheck(fIn, inFile->fileName, inFile->header);
-
-	// extract the image properties from the header
-	inFile->width = *(unsigned int*)&inFile->header[18];
-	inFile->height = *(unsigned int*)&inFile->header[22];
-	inFile->bitDepth = *(unsigned int*)&inFile->header[28];
-	inFile->size = inFile->width*inFile->height;
-	inFile->padding = ((inFile->width * 3 + 3) & ~3) - inFile->width * 3;
-
-	printf("Name: %s\n", inFile->fileName);
-	printf("Width: %d\n", inFile->width);
-	printf("Height: %d\n", inFile->height);
-	printf("Bit Depth: %d\n", inFile->bitDepth);
-	fclose(fIn);
-}
-
 void fileCheck(FILE* fp, char* fileName){
-	if(fp==NULL){
+	if(fp == NULL){
 		printf("fatal: cannot open '%s'\n", fileName);
 		exit(1);
 	}
@@ -54,7 +29,7 @@ void fileCheck(FILE* fp, char* fileName){
 
 void formatCheck(FILE* fp, char* fileName, unsigned char* fileHeader){
 	// use the file header to determine the file format
-	if(fileHeader[0]+fileHeader[1]!=0x8f){
+	if(fileHeader[0]+fileHeader[1] != 0x8f){
 		printf("warning: '%s' is not a bitmap\n", fileName);
 		fclose(fp);
 		exit(1);
@@ -62,48 +37,44 @@ void formatCheck(FILE* fp, char* fileName, unsigned char* fileHeader){
 }
 
 void extractColorTable(FILE* fIn, FILE* fOut){
+	// only 24-bit bitmaps are supported
+	// this function was added only for the sake of completeness
 	unsigned char colorTable[1024];
 	fread(colorTable, sizeof(unsigned char), 1024, fIn);
 	fwrite(colorTable, sizeof(unsigned char), 1024, fOut);
 }
 
-void convert(IMGDATA inFile, char* outFile){
-	FILE *fIn = fopen(inFile.fileName, "rb");
+void writeByte(FILE* fOut, int val){
+	unsigned char buffer[3];
+	// copy the pixel value to the buffer, thrice (RGB)
+	memset(buffer, val, sizeof(buffer));
+	// write the buffer to the output image
+	fwrite(&buffer, 3, 1, fOut);
+}
 
-	properties(&inFile);
-
-	FILE *fOut = fopen(outFile, "wb");
-
-	// check if the program has write permission
-	fileCheck(fOut, outFile);
-
-	// write header to the output file
-	fwrite(inFile.header, sizeof(unsigned char), 54, fOut);
-	fseek(fIn, 54, SEEK_SET);
-
-	// extract the color table the if a 8-bit image is provided
-	if(inFile.bitDepth<=8){
-		extractColorTable(fIn, fOut);
+void getMatrix(const QTREE* root){
+	int i, j;
+	for (i=0; i<pow(2, root->level); i++){
+		for (j=0; j<pow(2, root->level); j++){
+			printf("%u ", getPixel(root, i, j));
+		}
+		printf("\n");
 	}
+	printf("\n");
+}
 
-	unsigned int i, j;
-	unsigned char pixel, buffer[3];
+void initImage(IMGDATA* img, char* fileName){
+	img->fileName = fileName;
+	img->blacks = 0;
+	img->whites = 0;
+}
 
-    for (i=0; i<inFile.height; i++){
-    	for (j=0; j<inFile.width; j++){
-			// read pixel values from the input image
-			fread(buffer, 3, 1, fIn);
-			// convert RGB -> grayscale -> b/w
-			pixel = (buffer[0] * 0.3 + buffer[1] * 0.59 + buffer[2] * 0.11) > THRESHOLD ? WHITE : BLACK;
-			// copy the value stored in `pixel` to the buffer, thrice (RGB)
-			memset(buffer, pixel, sizeof(buffer));
-			// write the buffer to the output image
-			fwrite(&buffer, 3, 1, fOut);
-    	}
-		// padding at every row to make it a multiple of 4 bytes
-		fread(buffer, inFile.padding, 1, fIn);
-		fwrite(buffer, inFile.padding, 1, fOut);
-	}
-	fclose(fOut);
-	fclose(fIn);
+void printProperties(IMGDATA img, const QTREE* root){
+	unsigned long total = totalCount(root), whites = countNodes(root, 1), blacks = countNodes(root, 0);
+	printf("\nProperties (%s):\n", img.fileName);
+	printf("Image size: %ux%u | bit depth: %u\n", img.width, img.height, img.bitDepth);
+	// total pixels = size of the image
+	// number of black and white pixels are multiplied by 3 since we have to count the pixels in all three planes (RGB)
+	printf("Total pixels: %lu | whites: %u | blacks: %u\n", img.size, img.whites*3, img.blacks*3);
+	printf("Tree level: %d | Total nodes: %lu | greys: %lu | whites: %lu | blacks: %lu\n", root->level, total, total-(whites+blacks), whites, blacks);
 }
