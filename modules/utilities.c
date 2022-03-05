@@ -36,6 +36,22 @@ void formatCheck(FILE* fp, char* fileName, unsigned char* fileHeader){
 	}
 }
 
+void imageCheck(IMGDATA img){
+	if(
+		// check if it is a 24-bit image
+		(img.bitDepth != 24)
+		// check if the image width and height are equal
+		|| (img.width != img.height)
+		// check if the image width is a power of 2
+		|| (!(img.width && (!(img.width & (img.width-1)))))
+		// check if the image width within the 2^20 powers
+		|| (log2(img.width) > 20)
+	){
+		printf("fatal: '%s' does not meet documented requirements\n", img.fileName);
+		exit(1);
+	}
+}
+
 void extractColorTable(FILE* fIn, FILE* fOut){
 	// only 24-bit bitmaps are supported
 	// this function was added only for the sake of completeness
@@ -69,12 +85,18 @@ void initImage(IMGDATA* img, char* fileName){
 	img->whites = 0;
 }
 
-void printProperties(IMGDATA img, const QTREE* root){
+void printProperties(const IMGDATA img, const QTREE* root){
 	unsigned long total = totalCount(root), whites = countNodes(root, 1), blacks = countNodes(root, 0);
+	float rawImgSize = (img.size*img.bitDepth)/(float)(8*1024*1024), qtSize = (total*sizeof(QTREE))/(float)(1024*1024);
 	printf("\nProperties (%s):\n", img.fileName);
-	printf("Image size: %ux%u | bit depth: %u\n", img.width, img.height, img.bitDepth);
+	printf("Image resolution: %ux%u | bit depth: %u\n", img.width, img.height, img.bitDepth);
 	// total pixels = size of the image
-	// number of black and white pixels are multiplied by 3 since we have to count the pixels in all three planes (RGB)
-	printf("Total pixels: %lu | whites: %u | blacks: %u\n", img.size, img.whites*3, img.blacks*3);
+	// number of pixels are multiplied by 3 since we have to count the pixels in all three planes (RGB)
+	printf("Total pixels: %lu | whites: %u | blacks: %u\n", img.size*3, img.whites*3, img.blacks*3);
 	printf("Tree level: %d | Total nodes: %lu | greys: %lu | whites: %lu | blacks: %lu\n", root->level, total, total-(whites+blacks), whites, blacks);
+	// below values are converted to megabytes in the final output
+	// raw image size = image size * bit depth
+	// quadtree size = total nodes * sizeof(QTREE)
+	// size reduction = (raw image size - quadtree size) / raw image size * 100
+	printf("Raw image size: %.3f MB | Quadtree size: %.3f MB | Size reduction: %.f%%\n", rawImgSize, qtSize, ((rawImgSize-qtSize)/rawImgSize)*100);
 }

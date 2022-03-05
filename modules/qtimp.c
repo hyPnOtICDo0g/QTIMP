@@ -6,6 +6,8 @@
 #include "quadtree.h"
 #include "utilities.h"
 
+#ifdef DEBUG
+#define DEBUG
 int main(int argc, char** argv){
 
 	clock_t time = clock();
@@ -31,20 +33,13 @@ int main(int argc, char** argv){
 	}
 
 	// tasklist (ignore)
-	// display tree depth, number of nodes, count white & black pixels etc
-	// count number of nodes and actual pixels and display size reduction between them
-	// check if an image is b/w & 24bit
-	// check if image resolution is within power of 2^20
-	// check if image level is greater than 2^20 after log2()
 	// github docs image comparision and add sample images to a folder
-	// warning: image doesn't meet requirements (optional message args)
-	// string pattern match from the end .bmp
 	// check time calc once
-	// color table for sake of completeness
 	// check if gengetopt is installed
-	// display ratio of white to black pixels
 	// may not work on 24bit images with colortable
 	// remove all globals and use function restrcited file pointers if required
+	// check deletetree
+	// check size reduction for 2x2 image
 
 	// allocate buffer to store the image
 	unsigned char (*buffer)[size][3] = malloc(sizeof *buffer);
@@ -64,3 +59,4 @@ int main(int argc, char** argv){
 	printf("time taken: %.3fs\n", (double)(time)/CLOCKS_PER_SEC);
 	return 0;
 }
+#endif

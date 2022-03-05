@@ -25,8 +25,11 @@ void writeByte(FILE* fOut, int val);
 // initialize image structure to default values
 void initImage(IMGDATA* img, char* fileName);
 
+// check if the input image meets documented requirements
+void imageCheck(IMGDATA img);
+
 // print image and quadtree properties
-void printProperties(IMGDATA img, const QTREE* root);
+void printProperties(const IMGDATA img, const QTREE* root);
 
 // print the image matrix by traversing a quadtree (DEBUG)
 void getMatrix(const QTREE* root);
