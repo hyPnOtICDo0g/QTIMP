@@ -15,6 +15,6 @@ void invertHandler(FILE* fIn, FILE* fOut, IMGDATA imgInFile);
 QTREE* propertiesHandler(FILE* fIn, IMGDATA* inFile);
 
 // `--convert`
-void convertHandler(FILE* fIn, FILE* fOut, IMGDATA imgInFile, char* outFile);
+void convertHandler(FILE* fIn, FILE* fOut, IMGDATA imgInFile);
 
 #endif

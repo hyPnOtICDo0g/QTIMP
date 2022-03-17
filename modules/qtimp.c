@@ -40,7 +40,7 @@ int main(int argc, char** argv){
 
 		case 'c':
 			extensionCheck(cmdargs.outfile_arg[0]);
-			convertHandler(fIn1, fOut, imgInFile1, cmdargs.outfile_arg[0]);
+			convertHandler(fIn1, fOut, imgInFile1);
 			fclose(fOut);
 			break;
 

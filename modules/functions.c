@@ -45,7 +45,7 @@ void invertHandler(FILE* fIn, FILE* fOut, IMGDATA imgInFile){
     deleteTree(root);
 }
 
-void convertHandler(FILE* fIn, FILE* fOut, IMGDATA imgInFile, char* outFile){
+void convertHandler(FILE* fIn, FILE* fOut, IMGDATA imgInFile){
     imgProperties(&imgInFile);
     printf("Converting...\n");
     convert(fIn, fOut, imgInFile);
