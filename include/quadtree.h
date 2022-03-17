@@ -30,10 +30,10 @@ unsigned int getPixel(const QTREE* node, int x1, int y1);
 void deleteTree(QTREE* root);
 
 // deep copy a source tree and return the destination tree (clone)
-void treeCopy(QTREE** dest_t, const QTREE* source_t);
+void treeCopy(QTREE** destTree, const QTREE* sourceTree);
 
-// assigns a new tree to `root` by deleting it and cloning `source_t`
-void assignTree(QTREE** root, const QTREE* source_t);
+// assigns a new tree to `root` by deleting it and cloning `sourceTree`
+void assignTree(QTREE** root, const QTREE* sourceTree);
 
 // trim down redundant nodes, if any
 void postProcess(QTREE* node);

@@ -3,5 +3,3 @@ build
 a.out
 *.exe
 *.bmp
-cmdline*
-images

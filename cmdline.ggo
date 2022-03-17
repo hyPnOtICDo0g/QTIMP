@@ -1,6 +1,6 @@
 # App Details
 version "1.0.0"
-package "quadtree"
+package "qtimp"
 purpose "Image manipulation using quadtrees."
 
 # Options

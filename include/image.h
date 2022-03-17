@@ -1,9 +1,9 @@
 #ifndef IMAGE_H
 #define IMAGE_H
 
-#define WHITE 255
 #define BLACK 0
 #define THRESHOLD 128
+#define WHITE 255
 
 #include "quadtree.h"
 
@@ -24,10 +24,10 @@ typedef struct {
 void constructQuadTree(QTREE* root, FILE* fIn, IMGDATA* img);
 
 // write the image matrix to an output image by traversing a quadtree
-void writeMatrix(const QTREE* root,  FILE* fIn, FILE* fOut, IMGDATA img);
+void writeMatrix(const QTREE* root,  FILE* fIn, FILE* fOut, unsigned int padding);
 
 // convert a color image to a B&W image
-void convert(IMGDATA inFile, char* outFile);
+void convert(FILE* fIn, FILE* fOut, IMGDATA inFile);
 
 // extract image properties from the input image and display
 void imgProperties(IMGDATA* inFile);

@@ -145,28 +145,28 @@ void deleteTree(QTREE* root){
     }
 }
 
-void treeCopy(QTREE** dest_t, const QTREE* source_t){
-    (*dest_t) = createNode(source_t->level, source_t->value);
+void treeCopy(QTREE** destTree, const QTREE* sourceTree){
+    (*destTree) = createNode(sourceTree->level, sourceTree->value);
     // set children as NULL if the source node is a leaf
-    if (source_t->isLeaf){
-        (*dest_t)->tr = NULL;
-        (*dest_t)->tl = NULL;
-        (*dest_t)->br = NULL;
-        (*dest_t)->bl = NULL;
+    if (sourceTree->isLeaf){
+        (*destTree)->tr = NULL;
+        (*destTree)->tl = NULL;
+        (*destTree)->br = NULL;
+        (*destTree)->bl = NULL;
     }
     // recursively traverse the children and clone their contents
     else{
-        (*dest_t)->isLeaf = source_t->isLeaf;
-        treeCopy(&(*dest_t)->tr, source_t->tr);
-        treeCopy(&(*dest_t)->tl, source_t->tl);
-        treeCopy(&(*dest_t)->br, source_t->br);
-        treeCopy(&(*dest_t)->bl, source_t->bl);
+        (*destTree)->isLeaf = sourceTree->isLeaf;
+        treeCopy(&(*destTree)->tr, sourceTree->tr);
+        treeCopy(&(*destTree)->tl, sourceTree->tl);
+        treeCopy(&(*destTree)->br, sourceTree->br);
+        treeCopy(&(*destTree)->bl, sourceTree->bl);
     }
 }
 
-void assignTree(QTREE** root, const QTREE* source_t){
+void assignTree(QTREE** root, const QTREE* sourceTree){
     deleteTree(*root);
-    treeCopy(root, source_t);
+    treeCopy(root, sourceTree);
 }
 
 void postProcess(QTREE* node){

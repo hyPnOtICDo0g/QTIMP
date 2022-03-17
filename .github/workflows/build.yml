@@ -1,0 +1,31 @@
+name: Build CI
+
+on: [workflow_dispatch]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clone repo
+        uses: actions/checkout@v2
+
+      - name: Install Mingw
+        run: sudo apt install mingw-w64
+
+      - name: Build Linux & Windows binaries
+        run: |
+          make all
+          mv build/* .
+          sha256sum qtimp-linux-x86_64 > qtimp-linux-x86_64.sha256
+          sha256sum qtimp-windows-x86_64.exe > qtimp-windows-x86_64.exe.sha256 
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: binaries
+          path: |
+            qtimp-linux-x86_64
+            qtimp-windows-x86_64.exe
+            *.sha256
+          retention-days: 5

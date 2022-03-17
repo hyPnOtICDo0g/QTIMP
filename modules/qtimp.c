@@ -1,62 +1,57 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include <time.h>
 
 #include "image.h"
-#include "quadtree.h"
-#include "utilities.h"
+#include "functions.h"
 
-#ifdef DEBUG
-#define DEBUG
 int main(int argc, char** argv){
-
 	clock_t time = clock();
 
-	argsCheck(argc, argv);
+	ARGINFO cmdargs;
+	argsCheck(&cmdargs, argc, argv);
 
 	IMGDATA imgInFile1;
-	initImage(&imgInFile1, cmdargs.infile_arg[0]);
+	FILE *fOut = NULL, *fIn1 = fopen(cmdargs.infile_arg[0], "rb");
+	initImage(fIn1, &imgInFile1, cmdargs.infile_arg[0]);
 
-	if(cmdargs.properties_given){
-		imgProperties(&imgInFile1);
-	}
-	else if(cmdargs.convert_given){
-		convert(imgInFile1, cmdargs.outfile_arg[0]);
+	if(cmdargs.invert_given || cmdargs.union_given || cmdargs.intersect_given || cmdargs.convert_given){
+		fOut = fopen(cmdargs.outfile_arg[0], "wb");
 	}
 
-/*
-	else if(cmdargs.union_given){
-		filehandler(cmdargs.union_arg, cmdargs.outfile_arg);
+	switch(argsParse(cmdargs)){
+		// union and intersect options use a generic handler
+		// therefore to circumvent compiler warnings we add a `;` to the case statement
+		case 'u': ;
+		case 'n': ;
+			IMGDATA imgInFile2;
+			FILE *fIn2 = fopen(cmdargs.infile_arg[1], "rb");
+			initImage(fIn2, &imgInFile2, cmdargs.infile_arg[1]);
+			extensionCheck(cmdargs.outfile_arg[0]);
+			genericHandler(fIn1, fIn2, fOut, imgInFile1, imgInFile2, cmdargs);
+			fclose(fIn2);
+			fclose(fOut);
+			break;
+
+		case 'r':
+			extensionCheck(cmdargs.outfile_arg[0]);
+			invertHandler(fIn1, fOut, imgInFile1);
+			fclose(fOut);
+			break;
+
+		case 'c':
+			extensionCheck(cmdargs.outfile_arg[0]);
+			convertHandler(fIn1, fOut, imgInFile1, cmdargs.outfile_arg[0]);
+			fclose(fOut);
+			break;
+
+		case 'p':
+			deleteTree(propertiesHandler(fIn1, &imgInFile1));
+			break;
 	}
-	else if(cmdargs.intersect_given){
-		filehandler(cmdargs.intersect_arg, cmdargs.outfile_arg);
-	}
 
-	// tasklist (ignore)
-	// github docs image comparision and add sample images to a folder
-	// check time calc once
-	// check if gengetopt is installed
-	// may not work on 24bit images with colortable
-	// remove all globals and use function restrcited file pointers if required
-	// check deletetree
-	// check size reduction for 2x2 image
-
-	// allocate buffer to store the image
-	unsigned char (*buffer)[size][3] = malloc(sizeof *buffer);
-
-	// check if malloc succeded in allocating required buffer size
-	if(buffer==NULL){
-
-		printf("warning: insufficient memory");
-		return 0;
-	}
-
-	free(buffer);
-*/
-
+	fclose(fIn1);
 	time = clock()-time;
 
 	printf("time taken: %.3fs\n", (double)(time)/CLOCKS_PER_SEC);
 	return 0;
 }
-#endif
