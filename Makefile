@@ -14,10 +14,10 @@ linux:
 	$(CDIR) $(BUILD) && $(CC) $(CFLAGS) $(INC) $(SRC) -o $(BUILD)/$(EXEC)-linux-x86_64 $(LIBS)
 
 mingw-win:
-	$(CDIR) $(BUILD) && $(WINCC) $(CFLAGS) $(INC) $(SRC) -o $(BUILD)/$(EXEC)-windows-x86_64.exe -Os
+	$(CDIR) $(BUILD) && $(WINCC) $(CFLAGS) $(INC) $(SRC) -o $(BUILD)/$(EXEC)-windows-x86_64.exe -Os $(LIBS)
 
 windows:
-	$(WINCC) $(CFLAGS) $(INC) $(SRC) -o $(EXEC)-windows-x86_64.exe -Os
+	$(WINCC) $(CFLAGS) $(INC) $(SRC) -o $(EXEC)-windows-x86_64.exe -Os $(LIBS)
 
 clean:
 	rm -rf $(BUILD)
